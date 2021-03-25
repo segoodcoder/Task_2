@@ -1,0 +1,1 @@
+//text1.txt:hello, world!//text2.txt:hi, world!~

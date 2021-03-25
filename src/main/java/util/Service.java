@@ -34,7 +34,7 @@ public class Service {
     }
 
     public static void out(List<String> listOfFiles, String outputName) throws IOException {
-            int i = 0;
+            int i;
             char slash = '/';
             char colon = ':';
             char tilda = '~';
