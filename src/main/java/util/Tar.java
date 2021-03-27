@@ -1,16 +1,20 @@
 package util;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Tar {
 
-    public static void main(String[] args) throws Exception {
-        parse(args);
+    public static void main(String[] args) {
+        try {
+            parse(args);
+        } catch (Exception e) {
+            System.out.println("Файл не найден:(");
+        }
     }
+
 
     public static void parse(String[] args) throws Exception {
         List<String> listOfFiles = new ArrayList<>();

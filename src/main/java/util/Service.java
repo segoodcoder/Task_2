@@ -9,24 +9,24 @@ public class Service {
         Reader r = new FileReader(fileInputName);
         BufferedReader br = new BufferedReader(r);
         StringBuilder sb = new StringBuilder();
-        char ch = (char) br.read();
-        while (ch != '~') {
-            if (ch == '/') {
-                if (br.read() == '/') {
-                    ch = (char) br.read();
-                    while (ch != ':') {
-                        sb.append(ch);
-                        ch = (char) br.read();
+        int data = br.read();
+        while (data != -1) {
+            if ((char) data == '/') {
+                data = br.read();
+                if (data != -1 && (char) data == '/') {
+                    data = br.read();
+                    while (data != -1 && (char) data != ':') {
+                        sb.append((char) data);
+                        data = br.read();
                     }
                 }
             }
             FileWriter fw = new FileWriter(sb.toString());
             sb.delete(0, sb.length());
-            ch = (char) br.read();
-            while (ch != '/') {
-                if (ch == '~') break;
-                fw.write(ch);
-                ch = (char) br.read();
+            data = br.read();
+            while (data != -1 && (char) data != '/') {
+                fw.write(data);
+                data = br.read();
             }
             fw.close();
         }
@@ -37,7 +37,6 @@ public class Service {
             int i;
             char slash = '/';
             char colon = ':';
-            char tilda = '~';
         FileOutputStream fos = new FileOutputStream(outputName);
             for (i = 0; i < listOfFiles.size(); i++) {
                 FileInputStream fs = new FileInputStream(listOfFiles.get(i));
@@ -50,9 +49,6 @@ public class Service {
                 }
                 if (fs.available() == 0) {
                     fs.close();
-                }
-                if (i == listOfFiles.size() - 1) {
-                    fos.write(tilda);
                 }
             }
             fos.close();
