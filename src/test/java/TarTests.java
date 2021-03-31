@@ -1,14 +1,15 @@
 import org.junit.Test;
 import org.junit.*;
+import org.junit.function.ThrowingRunnable;
 import util.Service;
 import util.Tar;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TarTests {
+
 
     @Test
     public void out() throws Exception {
@@ -22,6 +23,52 @@ public class TarTests {
         Assert.assertTrue(fileEquals("test1.txt", "text1.txt"));
         Assert.assertTrue(fileEquals("test2.txt", "text2.txt"));
     }
+
+    @Test
+    public void mainTestOutNormal() throws Exception {
+        String[] args = {"text1.txt", "text2.txt", "-out", "outputFile1.txt"};
+        Tar.main(args);
+        Assert.assertTrue(fileEquals("expected.txt", "outputFile1.txt"));
+     }
+
+    @Test
+    public void mainTestUNormal() throws Exception {
+        String[] args = {"-u", "expected_u.txt"};
+        Tar.main(args);
+        Assert.assertTrue(fileEquals("test1.txt", "text1.txt"));
+        Assert.assertTrue(fileEquals("test2.txt", "text2.txt"));
+    }
+
+    @Test
+    public void singleArgument() {
+        String[] args = {""};
+        Assert.assertThrows(IllegalArgumentException.class, () -> Tar.parse(args));
+    }
+
+    @Test
+    public void noSuchFile() {
+        String[] args = {"-u", "a.txt"};
+        Assert.assertThrows(FileNotFoundException.class, () -> Tar.parse(args));
+    }
+
+    @Test
+    public void twoKeys() {
+        String[] args = {"-u", "-out"};
+        Assert.assertThrows(IllegalArgumentException.class, () -> Tar.parse(args));
+    }
+
+    @Test
+    public void emptyKeys() {
+        String[] args = {"", "", ""};
+        Assert.assertThrows(IllegalArgumentException.class, () -> Tar.parse(args));
+    }
+
+    @Test
+    public void uEmptyKey() {
+        String[] args = {"-u", ""};
+        Assert.assertThrows(FileNotFoundException.class, () -> Tar.parse(args));
+    }
+
 
     public boolean fileEquals(String name1, String name2) throws IOException {
         FileReader fr1 = new FileReader(name1);
